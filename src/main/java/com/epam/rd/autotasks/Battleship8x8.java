@@ -12,31 +12,19 @@ public class Battleship8x8 {
 
     public boolean shoot(String shot) {
         StringBuilder shipsMap = new StringBuilder( Long.toBinaryString(ships) );
-
         if(shipsMap.length() < 64){
             shipsMap.insert(0,"0");
         }
 
         int index = shotToIndex(shot);
 
-        //I need to register the shot
-        if(shots == 0){
-            StringBuilder shotsMap = new StringBuilder();
-            shotsMap.append("0".repeat(index+1));
-            shotsMap.setCharAt(index,'1');
-            BigInteger shotsMapB = new BigInteger(shotsMap.toString(),2);
-            shots = shotsMapB.longValue();
-        }else{
-            registerTheShot(shot);
-        }
-
-
+        registerTheShot(shot);
 
         return shipsMap.charAt(index) == '1';
     }
 
 /*
-* takes a String "shot" of the form eg. "A2"
+* takes a String "shot" of the form like "A2"
 * and converts it into an int, representing
 * the index
 */
@@ -72,8 +60,16 @@ public class Battleship8x8 {
     private void registerTheShot (String shot){
         int index = shotToIndex(shot);//I will need to put '1' into this location
 
-        //convert long integer "shots" to a string representing its value in binary
-        StringBuilder shotsMap = new StringBuilder(Long.toBinaryString(shots));
+        //convert long integer "shots" to a string representing the battleship field
+        StringBuilder shotsMap = new StringBuilder();
+
+        if(shots == 0){//if it is the first shot
+            shotsMap.append("0".repeat(64));
+        }else{
+            String leadingZeros = String.format("%64s", Long.toBinaryString(shots)).replace(' ','0');//I tried to keep the leading zeros
+            shotsMap.append(leadingZeros);
+        }
+
 
         //I will put '1' into the location "index"
         if(shotsMap.length()>index){
@@ -86,21 +82,25 @@ public class Battleship8x8 {
             }
             shotsMap.append('1');
         }
+
+
         BigInteger shotsMapB = new BigInteger(shotsMap.toString(), 2);
         shots = shotsMapB.longValue();
-
 
     }
     public String state() {
 
-        //String shipsMap = Long.toBinaryString(ships);
+
         StringBuilder shipsMap = new StringBuilder( Long.toBinaryString(ships) );
 
         if(shipsMap.length() < 64){
             shipsMap.insert(0,"0");
         }
 
+
+
         StringBuilder shotsMap = new StringBuilder(Long.toBinaryString(shots));
+
         if(shotsMap.length()<64){
             for(int i = shotsMap.length(); i<64; i++){
                 shotsMap.append('0');
@@ -135,7 +135,7 @@ public class Battleship8x8 {
 
     public static void main(String[] args) {
         Battleship8x8 myTry = new Battleship8x8(0b01010000_01000010_01000100_01000000_00001110_00110001_10000100_11100000L);
-        System.out.println(myTry.shoot("A3"));
+        myTry.shoot("A3");
         myTry.shoot("D7");
         myTry.shoot("A5");
         myTry.shoot("F3");
