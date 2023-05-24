@@ -12,6 +12,16 @@ public class Battleship8x8 {
         String shipsMap = Long.toBinaryString(ships);
         int index = shotToIndex(shot);
 
+        //I need to register the shot
+        StringBuilder shotsMap = new StringBuilder();
+        if (shots != 0){
+            shotsMap = new StringBuilder(Long.toBinaryString(shots));
+        }else{
+            shotsMap.append("0".repeat(63));
+        }
+        shotsMap.setCharAt(index,'1');
+        shots = Long.parseLong(shotsMap.toString(),2);
+
         return shipsMap.charAt(index) == '1';
     }
 
@@ -58,6 +68,6 @@ public class Battleship8x8 {
         System.out.println(myTry.shoot("B1"));
         //myTry.shoot("A1");
         //myTry.shoot("F3");
-        System.out.println(myTry.shoot("A1"));
+        System.out.println(myTry.shoot("A2"));
     }
 }
