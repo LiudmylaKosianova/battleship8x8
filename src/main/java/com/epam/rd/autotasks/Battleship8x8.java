@@ -11,54 +11,29 @@ public class Battleship8x8 {
     }
 
     public boolean shoot(String shot) {
+
+        //I turn long int "ships" into a string, representing the battlefield, where '0' is an empty cell and '1' the cell occupied by a ship
         StringBuilder shipsMap = new StringBuilder( Long.toBinaryString(ships) );
         if(shipsMap.length() < 64){
             shipsMap.insert(0,"0");
         }
 
-        int index = shotToIndex(shot);
+        //I turn string "shot" into int "index" so that I can find this location in the string "shipsMap"
+        int column = shot.charAt(0) - 65;
+        int row = Integer.parseInt( String.valueOf(shot.charAt(1)) );
+        int index = (8 * (row -1)) + column;
 
-        registerTheShot(shot);
+        registerTheShot(shot);//this was the hardest
 
         return shipsMap.charAt(index) == '1';
     }
 
-/*
-* takes a String "shot" of the form like "A2"
-* and converts it into an int, representing
-* the index
-*/
-    private int shotToIndex (String shot){
-
-        char letter = shot.charAt(0);
-        int column = 0;
-        if(letter == 'A'){
-            column = 0;
-        }else if(letter == 'B'){
-            column = 1;
-        }else if(letter == 'C'){
-            column = 2;
-        }else if(letter == 'D'){
-            column = 3;
-        }else if(letter == 'E'){
-            column = 4;
-        }else if(letter == 'F'){
-            column = 5;
-        }else if(letter == 'G'){
-            column = 6;
-        }else if(letter == 'H'){
-            column = 7;
-        }
-
-        String number = String.valueOf(shot.charAt(1));
-        int row = Integer.parseInt(number);
-
-        return (8 * (row -1)) + column;
-
-    }
-
     private void registerTheShot (String shot){
-        int index = shotToIndex(shot);//I will need to put '1' into this location
+
+        //I turn "shot" into int "index"
+        int column = shot.charAt(0) - 65;
+        int row = Integer.parseInt( String.valueOf(shot.charAt(1)) );
+        int index = (8 * (row -1)) + column;
 
         //convert long integer "shots" to a string representing the battleship field
         StringBuilder shotsMap = new StringBuilder();
@@ -69,7 +44,6 @@ public class Battleship8x8 {
             String leadingZeros = String.format("%64s", Long.toBinaryString(shots)).replace(' ','0');//I tried to keep the leading zeros
             shotsMap.append(leadingZeros);
         }
-
 
         //I will put '1' into the location "index"
         if(shotsMap.length()>index){
@@ -83,7 +57,7 @@ public class Battleship8x8 {
             shotsMap.append('1');
         }
 
-
+        //turn string into long integer
         BigInteger shotsMapB = new BigInteger(shotsMap.toString(), 2);
         shots = shotsMapB.longValue();
 
@@ -97,16 +71,9 @@ public class Battleship8x8 {
             shipsMap.insert(0,"0");
         }
 
-
-
-        StringBuilder shotsMap = new StringBuilder(Long.toBinaryString(shots));
-
-        if(shotsMap.length()<64){
-            for(int i = shotsMap.length(); i<64; i++){
-                shotsMap.append('0');
-            }
-        }
-
+        StringBuilder shotsMap = new StringBuilder();
+        String leadingZeros = String.format("%64s", Long.toBinaryString(shots)).replace(' ','0');//I tried to keep the leading zeros
+        shotsMap.append(leadingZeros);
 
         StringBuilder answer = new StringBuilder();
         for(int i = 0; i<64; i++){
